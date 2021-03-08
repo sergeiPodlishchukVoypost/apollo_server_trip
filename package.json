@@ -1,0 +1,24 @@
+{
+  "name": "apollo_server_trip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon api/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeiPodlishchukVoypost/apollo_server_trip.git"
+  },
+  "author": "Sergey Podlishchuk <podluy23@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sergeiPodlishchukVoypost/apollo_server_trip/issues"
+  },
+  "homepage": "https://github.com/sergeiPodlishchukVoypost/apollo_server_trip#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.19"
+  }
+}
