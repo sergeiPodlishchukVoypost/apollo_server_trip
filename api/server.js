@@ -41,16 +41,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/", tripsRouters);
-
 const typeDefs = gql`
-  type Query {
-    trips(offset: Int, limit: Int): [Trip!]!
-  }
-
-  type Mutation {
-    createTrip(input: CreateTripInput!): Trip
-  }
   type Trip {
     id: ID!
     from: Location!
@@ -65,6 +56,13 @@ const typeDefs = gql`
     fromPlaceId: String!
     toPlaceId: String!
   }
+  type Query {
+    trips(offset: Int, limit: Int): [Trip!]!
+  }
+
+  type Mutation {
+    createTrip(input: CreateTripInput!): Trip
+  }
 `;
 
 const resolvers = {
@@ -73,10 +71,20 @@ const resolvers = {
       return await tripModel.find();
     },
   },
-  Mutation: async ({ input }) => {
-    console.log("input", input);
-    await tripModel.create(input);
-    // return "eee";
+  Mutation: {
+    createTrip: async (parent, { input }, context) => {
+      const obj = JSON.parse(JSON.stringify(input));
+      console.log(obj);
+
+      const newTrip = {
+        from: { name: "KH" },
+        to: { name: "KIEV" },
+      };
+
+      await tripModel.create(newTrip);
+
+      return newTrip;
+    },
   },
 };
 
