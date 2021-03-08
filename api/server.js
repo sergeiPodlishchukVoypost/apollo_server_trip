@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const axios = require("axios");
 
-// const tripsRouters = require("./trips/trips.routers");
-
 const { ApolloServer, gql } = require("apollo-server-express");
 
 const tripModel = require("./trips/trips.model");
@@ -72,7 +70,6 @@ const takeLocation = async (lat, lon) => {
   const getPlace = await axios.get(
     `${lat},${lon}.json?access_token=${MAPBOX_API_TOKEN}`
   );
-  //   console.log(getPlace);
   const dataLocation = await getPlace.data.features[0].place_name;
 
   if (dataLocation) {
