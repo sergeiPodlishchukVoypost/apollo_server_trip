@@ -9,6 +9,6 @@ const tripSchema = new Schema({
   to: { type: String, required: true },
 });
 
-const tripModel = mongoose.model("Contact", tripSchema);
+const tripModel = mongoose.model("Trip", tripSchema);
 
 module.exports = tripModel;

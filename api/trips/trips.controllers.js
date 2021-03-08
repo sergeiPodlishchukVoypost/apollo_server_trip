@@ -1,7 +1,7 @@
 "use strict";
 
 const tripModel = require("./trips.model");
-const Joi = require("joi");
+// const Joi = require("joi");
 const {
   Types: { ObjectId },
 } = require("mongoose");
@@ -9,7 +9,9 @@ const {
 async function listTrips(req, res, next) {
   try {
     const listTrips = await tripModel.find();
+
     return res.status(200).json(listTrips);
+    // return res.status(200).json({ name: "hello" });
   } catch (error) {
     next(error);
   }
@@ -17,26 +19,28 @@ async function listTrips(req, res, next) {
 
 async function getById(req, res, next) {
   try {
-    const contactId = req.params.contactId;
-    const contactById = await contactModel.findById(contactId);
+    const tripId = req.params.tripId;
+    const tripById = await tripModel.findById(tripId);
 
-    if (!contactById) {
+    if (!tripById) {
       return res.status(404).send();
     }
 
-    return res.status(200).json(contactById);
+    return res.status(200).json(tripById);
   } catch (error) {
     next(error);
   }
 }
-async function addContact(req, res, next) {
+
+async function addTrip(req, res, next) {
   try {
-    const contactCreate = await contactModel.create(req.body);
-    return res.status(201).json(contactCreate);
+    const tripCreate = await tripModel.create(req.body);
+    return res.status(201).json(tripCreate);
   } catch (error) {
     next(error);
   }
 }
+
 async function removeContact(req, res, next) {
   try {
     const contactId = req.params.contactId;
@@ -77,42 +81,11 @@ function validateId(req, res, next) {
   next();
 }
 
-function validateContact(req, res, next) {
-  const validationRules = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().required(),
-    phone: Joi.string().required(),
-    subscription: Joi.string().required(),
-    password: Joi.string().required(),
-  });
-  const val = validationRules.validate(req.body);
-  if (val.error) {
-    return res.status(400).send(val.error.details[0].message);
-  }
-  next();
-}
-function validateUpdateContact(req, res, next) {
-  const validationRules = Joi.object({
-    name: Joi.string(),
-    email: Joi.string(),
-    phone: Joi.string(),
-    subscription: Joi.string(),
-    password: Joi.string(),
-  });
-  const val = validationRules.validate(req.body);
-  if (val.error) {
-    return res.status(400).send(val.error.details[0].message);
-  }
-  next();
-}
-
 module.exports = {
   listTrips,
-  //   getById,
-  //   addContact,
+  getById,
+  addTrip,
   //   removeContact,
   //   updateContact,
-  //   validateId,
-  //   validateContact,
-  //   validateUpdateContact,
+  validateId,
 };
