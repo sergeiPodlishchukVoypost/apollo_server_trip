@@ -9,9 +9,7 @@ const {
 async function listTrips(req, res, next) {
   try {
     const listTrips = await tripModel.find();
-
     return res.status(200).json(listTrips);
-    // return res.status(200).json({ name: "hello" });
   } catch (error) {
     next(error);
   }

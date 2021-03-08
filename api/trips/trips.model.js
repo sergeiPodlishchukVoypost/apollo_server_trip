@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const tripSchema = new Schema({
-  from: { type: String, required: true },
-  to: { type: String, required: true },
+  from: { name: { type: String, required: true } },
+  to: { name: { type: String, required: true } },
 });
 
 const tripModel = mongoose.model("Trip", tripSchema);

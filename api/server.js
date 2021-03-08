@@ -2,20 +2,18 @@
 
 const express = require("express");
 const mongoose = require("mongoose");
-// const { ApolloServer } = require("apollo-server-express");
+const cors = require("cors");
+const { graphqlHTTP } = require("express-graphql");
 
 const tripsRouters = require("./trips/trips.routers");
 
-const PORT = 4545;
+const { ApolloServer } = require("apollo-server-express");
 
+const schema = require("./shema");
+
+const PORT = 4545;
 const MONGO_DB_URL =
   "mongodb+srv://SergeiPodlishchuk:fbm6!E-HPvYMd2k@cluster0.x1opf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers,
-// });
-
-// server.applyMiddleware({ app });
 
 (async function () {
   return await mongoose.connect(
@@ -35,9 +33,35 @@ const MONGO_DB_URL =
     }
   );
 })();
+
 const app = express();
+
 app.use(express.json());
-app.use("/", tripsRouters);
+app.use(cors());
+// app.use("/", tripsRouters);
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    graphiql: true,
+    schema,
+  })
+);
+
+// const resolvers = {
+//   Query: {
+//     trips: () => trips,
+//   },
+// };
+
+// const server = new ApolloServer({
+//   schema,
+//   resolvers,
+// });
+
+// server.applyMiddleware({ app });
+
+// console.log(server);
 
 app.listen(PORT, () => {
   console.log(`Server start on port ${PORT}`);
