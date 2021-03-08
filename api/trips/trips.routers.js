@@ -9,6 +9,7 @@ tripRouter.get("/", tripControllers.listTrips);
 tripRouter.get("/:tripId", tripControllers.validateId, tripControllers.getById);
 
 tripRouter.post("/", tripControllers.addTrip);
+
 // tripRouter.delete(
 //   "/:tripId",
 //   tripControllers.validateId,

@@ -3,13 +3,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { graphqlHTTP } = require("express-graphql");
+// const { graphqlHTTP } = require("express-graphql");
 
-// const tripsRouters = require("./trips/trips.routers");
+const tripsRouters = require("./trips/trips.routers");
 
-// const { ApolloServer } = require("apollo-server-express");
+const { ApolloServer, gql } = require("apollo-server-express");
 
-const schema = require("./shema");
+// const schema = require("./shema");
 
 const tripModel = require("./trips/trips.model");
 
@@ -40,42 +40,53 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-// app.use("/", tripsRouters);
 
-const root = {
-  trips: async () => {
-    return await tripModel.find();
+app.use("/", tripsRouters);
+
+const typeDefs = gql`
+  type Query {
+    trips(offset: Int, limit: Int): [Trip!]!
+  }
+
+  type Mutation {
+    createTrip(input: CreateTripInput!): Trip
+  }
+  type Trip {
+    id: ID!
+    from: Location!
+    to: Location!
+  }
+
+  type Location {
+    name: String!
+  }
+
+  input CreateTripInput {
+    fromPlaceId: String!
+    toPlaceId: String!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    trips: async () => {
+      return await tripModel.find();
+    },
   },
-  createTrip: async (input) => {
+  Mutation: async ({ input }) => {
     console.log("input", input);
-    return await tripModel.create(input);
+    await tripModel.create(input);
+    // return "eee";
   },
 };
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    graphiql: true,
-    schema,
-    rootValue: root,
-  })
-);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-// const resolvers = {
-//   Query: {
-//     trips: () => trips,
-//   },
-// };
+server.applyMiddleware({ app });
 
-// const server = new ApolloServer({
-//   schema,
-//   resolvers,
-// });
-
-// server.applyMiddleware({ app });
-
-// console.log(server);
-
-app.listen(PORT, () => {
-  console.log(`Server start on port ${PORT}`);
+app.listen({ port: PORT }, () => {
+  console.log(`Server start on port ${PORT} ${server.graphqlPath}`);
 });
